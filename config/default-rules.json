@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "deep_probe_triggers": [
+    "size_zero",
+    "duplicate_name_group",
+    "low_signal_fork"
+  ],
+  "delete_candidate_requires": [
+    "deep_check_completed",
+    "no_commits",
+    "no_branches",
+    "no_releases",
+    "no_issues",
+    "no_pull_requests",
+    "no_probe_errors"
+  ],
+  "never_sufficient_alone": [
+    "inactive",
+    "fork",
+    "private",
+    "public",
+    "missing_description"
+  ]
+}

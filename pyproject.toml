@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "github-rep-safe-cleaner"
-version = "0.1.0"
-description = "Read-only GitHub repository safety foundation"
+version = "0.5.0"
+description = "Read-only GitHub repository inventory and conservative classification"
 readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}

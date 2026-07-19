@@ -15,7 +15,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - run: python -m pip install -e .
-      - run: python -m compileall -q src scripts tests
-      - run: python scripts/check_safety.py
-      - run: python -m unittest discover -s tests -v
+      - name: Install
+        run: python -m pip install -e .
+      - name: Compile
+        run: python -m compileall -q src scripts tests
+      - name: Safety gate
+        run: python scripts/check_safety.py
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Demo report
+        run: repo-safe-cleaner demo --output artifacts/demo
+      - name: Verify demo artifacts
+        run: test -s artifacts/demo/review.html && test -s artifacts/demo/inventory.json

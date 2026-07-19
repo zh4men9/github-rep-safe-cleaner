@@ -1,0 +1,8 @@
+schema_version: 1
+state: WAITING_FOR_REAL_ENV_TEST
+reason: Offline implementation and validation are complete; the next evidence must come from the user's authenticated GitHub account and browser review.
+updated_at: 2026-07-19
+resume_when:
+  - user provides first real scan output or error
+  - user provides candidate-quality feedback
+notification_policy: STATE_CHANGE_ONLY

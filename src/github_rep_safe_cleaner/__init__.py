@@ -1,3 +1,3 @@
-"""Read-only GitHub repository inventory and classification."""
+"""Read-only GitHub repository inventory and review tooling."""
 
-__version__ = "0.5.0"
+__version__ = "1.0.0"

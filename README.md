@@ -8,7 +8,7 @@ It does **not** delete repositories, archive repositories, change visibility, ed
 
 ## What it produces
 
-Each run writes an immutable directory under `artifacts/runs/<timestamp>/`:
+Each run writes a directory under `artifacts/runs/<timestamp>/` or a user-selected output path:
 
 ```text
 inventory.json
@@ -17,9 +17,12 @@ report.md
 candidates.md
 review.html
 manifest.json
+checkpoint.json
 ```
 
 `review.html` is a fully local page. It makes no network requests. Decisions are stored in browser `localStorage` and can be exported as `decisions.json`.
+
+`checkpoint.json` is operational scan state. A repeated scan using the same `--output` directory reuses only successful deep-verification results whose repository ID and update fingerprint still match. Failed probes and changed repositories are checked again.
 
 ## Classification
 
@@ -27,7 +30,7 @@ manifest.json
 - `MANUAL_REVIEW`: duplicates, old forks, archived repositories, long-inactive repositories, incomplete evidence, and public repositories with weak metadata.
 - `KEEP`: no deletion-grade evidence was found.
 
-Inactivity alone never creates a deletion candidate. Fork status alone never creates a deletion candidate.
+Inactivity alone never creates a deletion candidate. Fork status alone never creates a deletion candidate. Exhausted network failures leave evidence unknown and therefore route to manual review rather than deletion.
 
 ## Install
 
@@ -55,10 +58,20 @@ repo-safe-cleaner scan
 
 The command uses only `GET` requests against a narrow endpoint allowlist. Candidate-like repositories receive deeper read-only checks.
 
-To choose an output directory:
+Transient network failures and retryable HTTP responses use bounded exponential backoff with jitter. The default is five retries. Retry activity is printed to stderr and the final `retry_events` count is printed with the run outputs.
+
+To choose a resumable output directory:
 
 ```bash
 repo-safe-cleaner scan --output artifacts/runs/my-first-scan
+```
+
+If the process is interrupted, run the **same command with the same output directory**. Do not delete that directory first; successful checkpointed probes will be resumed.
+
+To increase or reduce transient-request retries:
+
+```bash
+repo-safe-cleaner scan --output artifacts/runs/my-first-scan --max-retries 7
 ```
 
 To skip deep checks temporarily:
@@ -95,10 +108,11 @@ The safety boundary is structural rather than procedural:
 - CI has only `contents: read` permission;
 - a static and AST-based safety gate scans executable paths;
 - generated pages contain no GitHub API client;
-- reports are advisory and require manual review.
+- reports are advisory and require manual review;
+- transient failures cannot become deletion evidence.
 
 See [`docs/safety-model.md`](docs/safety-model.md).
 
 ## Current status
 
-Version `1.0.0` implements the full read-only pipeline. The remaining acceptance step is a real scan of the owner's GitHub account and manual inspection of the generated `review.html`.
+Version `1.1.0` addresses the first real-account failure: bounded retry, per-repository transport circuit breaking, and resumable deep-scan checkpoints are implemented. The remaining acceptance step is to rerun the real 228-repository account scan and inspect the generated `review.html`.

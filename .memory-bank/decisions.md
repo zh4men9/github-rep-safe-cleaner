@@ -15,3 +15,15 @@ Use Python 3.11 standard library only for the runtime. This minimizes dependency
 ## 2026-07-19 — Local static review
 
 Generate a self-contained HTML review page with localStorage and JSON export. Do not run a server or make browser-side GitHub requests.
+
+## 2026-08-17 — Retry transient reads inside the read-only transport
+
+`URLError`, `HTTPException`, `OSError`, invalid JSON, HTTP 429, and selected 5xx responses receive bounded retries. This belongs in the transport layer so callers cannot accidentally bypass it.
+
+## 2026-08-17 — Exhausted transport failure is unknown evidence
+
+A per-repository transport failure that survives all retries does not abort the scan and cannot support deletion. Remaining probes for that repository are skipped, its evidence remains unknown, and classification becomes manual review.
+
+## 2026-08-17 — Fingerprinted checkpoint resume
+
+Successful deep-probe results are persisted with repository ID, `updated_at`, and `pushed_at`. A later run reuses them only when the fingerprint still matches; failed or changed repositories are probed again.

@@ -11,3 +11,11 @@ Implemented authenticated public/private owned-repository pagination, candidate-
 ## 2026-07-19 — v1.0 review delivery
 
 Implemented immutable run artifacts, JSON/CSV/Markdown reports, self-contained interactive review HTML, decision export, offline demo, unit tests, and safety checks.
+
+## 2026-08-17 — first real-account test
+
+Install, safety tests, demo, authentication, and 228-repository inventory succeeded. Deep verification selected 94 targets but failed twice with `Connection reset by peer`, first at 13/94 and then at 2/94.
+
+## 2026-08-17 — v1.1 transport resilience
+
+Implemented bounded retries with backoff/jitter, explicit retry observability, per-repository transport circuit breaking, fingerprinted checkpoint/resume, and regression tests for both connection resets and resume invalidation.

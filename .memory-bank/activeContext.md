@@ -2,12 +2,12 @@
 
 ## Current stage
 
-Version 1.0.0 implementation is complete on the initial feature branch and awaits real-account acceptance.
+Version 1.1.0 reliability work is implemented on `agent/read-only-repo-auditor` after the first real-account test exposed transient network-reset failure.
 
 ## Main contradiction
 
-Offline correctness and structural safety are verified, but only a real authenticated scan can validate API coverage, runtime duration, private-repository access, candidate quality, and the local review experience against the user's actual account.
+The v1.0 pipeline successfully authenticated, loaded 228 owned repositories, and selected 94 deep-verification targets, but an uncaught connection reset aborted the scan twice. The code now contains retries, transport failure containment, and resumable checkpoints; these changes require a second real-account run to prove the failure is resolved in the user's actual network.
 
 ## Current route
 
-Run a real scan, inspect `review.html`, and return the generated report or concrete failures. Do not add any GitHub mutation feature.
+Keep Draft PR #1 open. Require repository-side CI to pass for the v1.1 head, then rerun the same real scan output path without deleting it. Do not add any GitHub mutation feature.

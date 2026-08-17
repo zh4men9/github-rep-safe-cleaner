@@ -202,7 +202,6 @@ class ReadOnlyGitHubClient:
     def probe_repository(self, full_name: str) -> dict[str, Any]:
         owner, name = _split_full_name(full_name)
         root = f"/repos/{owner}/{name}"
-        result: dict[str, Any] = {"checked": True, "errors": []}
         probes = {
             "has_commits": (f"{root}/commits", {}),
             "has_releases": (f"{root}/releases", {}),
@@ -210,6 +209,10 @@ class ReadOnlyGitHubClient:
             "has_pull_requests": (f"{root}/pulls", {"state": "all"}),
             "has_branches": (f"{root}/branches", {}),
         }
+        result: dict[str, Any] = {"checked": True, "errors": []}
+        for key in probes:
+            result[key] = None
+
         for key, (path, params) in probes.items():
             try:
                 response = self.request(path, params={**params, "per_page": 1, "page": 1})
@@ -220,9 +223,14 @@ class ReadOnlyGitHubClient:
                     "GitHub API 409" in message or "Git Repository is empty" in message
                 ):
                     result[key] = False
-                else:
-                    result[key] = None
-                    result["errors"].append(f"{key}: {message}")
+                    continue
+
+                result["errors"].append(f"{key}: {message}")
+                if "GitHub network error after" in message:
+                    result["errors"].append(
+                        "remaining probes skipped after exhausted transport retries; evidence remains unknown"
+                    )
+                    break
         return result
 
 

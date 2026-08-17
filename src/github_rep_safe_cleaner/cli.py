@@ -23,6 +23,12 @@ def build_parser() -> argparse.ArgumentParser:
     scan.add_argument("--output", type=Path, default=None, help="Run output directory.")
     scan.add_argument("--no-deep", action="store_true", help="Skip deep read-only verification of candidate repositories.")
     scan.add_argument("--base-url", default="https://api.github.com", help="GitHub REST API base URL.")
+    scan.add_argument(
+        "--max-retries",
+        type=int,
+        default=5,
+        help="Maximum retries for transient read-only GitHub requests (default: 5).",
+    )
 
     analyze = sub.add_parser("analyze", help="Analyze a saved GitHub API repository list without network access.")
     analyze.add_argument("input", type=Path, help="JSON list returned by the GitHub repositories API.")
@@ -53,15 +59,25 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _run_scan(args: argparse.Namespace) -> int:
-    client = ReadOnlyGitHubClient(resolve_token(), base_url=args.base_url)
+    output = args.output or default_run_directory()
+    checkpoint = output / "checkpoint.json"
+    client = ReadOnlyGitHubClient(
+        resolve_token(),
+        base_url=args.base_url,
+        max_retries=args.max_retries,
+        on_retry=lambda message: print(message, file=sys.stderr),
+    )
     owner, repositories = scan_account(
         client,
         deep_candidates=not args.no_deep,
         progress=lambda message: print(message, file=sys.stderr),
+        checkpoint_path=checkpoint,
     )
     assessments = assess_all(repositories)
-    output = args.output or default_run_directory()
     paths = write_run(output, owner=owner, assessments=assessments, rate_limit=client.last_rate_limit)
+    if checkpoint.exists():
+        paths["checkpoint"] = checkpoint
+    print(f"retry_events: {client.retry_events}")
     _print_paths(paths)
     return 0
 

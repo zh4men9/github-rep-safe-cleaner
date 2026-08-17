@@ -83,17 +83,19 @@ class ReadOnlyClientTests(unittest.TestCase):
             with self.assertRaisesRegex(GitHubApiError, "after 2 attempts"):
                 client.request("/user")
 
-    def test_probe_records_exhausted_network_failures_instead_of_aborting(self) -> None:
+    def test_probe_records_exhausted_network_failure_and_skips_remaining_probes(self) -> None:
         client = ReadOnlyGitHubClient(
             "test-token",
             base_url="https://example.invalid",
             max_retries=0,
         )
         failure = URLError(ConnectionResetError(54, "Connection reset by peer"))
-        with patch("github_rep_safe_cleaner.client.urlopen", side_effect=failure):
+        with patch("github_rep_safe_cleaner.client.urlopen", side_effect=failure) as mocked:
             evidence = client.probe_repository("demo-user/example")
         self.assertTrue(evidence["checked"])
-        self.assertEqual(len(evidence["errors"]), 5)
+        self.assertEqual(mocked.call_count, 1)
+        self.assertEqual(len(evidence["errors"]), 2)
+        self.assertIn("remaining probes skipped", evidence["errors"][1])
         self.assertIsNone(evidence["has_commits"])
         self.assertIsNone(evidence["has_releases"])
         self.assertIsNone(evidence["has_issues"])

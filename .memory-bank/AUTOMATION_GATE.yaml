@@ -1,0 +1,8 @@
+schema_version: 1
+state: WAITING_FOR_REAL_ENV_TEST
+reason: v1.1 retry and resume hardening is implemented; the next decisive evidence is a second authenticated scan on the user's real GitHub account and network.
+updated_at: 2026-08-17
+resume_when:
+  - user provides the v1.1 real scan output or failure
+  - user provides candidate-quality or browser-review feedback
+notification_policy: STATE_CHANGE_ONLY

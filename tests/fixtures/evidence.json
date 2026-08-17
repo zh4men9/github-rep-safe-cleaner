@@ -1,0 +1,38 @@
+{
+  "demo-user/empty-demo": {
+    "checked": true,
+    "has_commits": false,
+    "has_releases": false,
+    "has_issues": false,
+    "has_pull_requests": false,
+    "has_branches": false,
+    "errors": []
+  },
+  "demo-user/chat-app": {
+    "checked": true,
+    "has_commits": true,
+    "has_releases": false,
+    "has_issues": false,
+    "has_pull_requests": false,
+    "has_branches": true,
+    "errors": []
+  },
+  "demo-user/chat-app-1": {
+    "checked": true,
+    "has_commits": true,
+    "has_releases": false,
+    "has_issues": false,
+    "has_pull_requests": false,
+    "has_branches": true,
+    "errors": []
+  },
+  "demo-user/old-fork": {
+    "checked": true,
+    "has_commits": true,
+    "has_releases": false,
+    "has_issues": false,
+    "has_pull_requests": false,
+    "has_branches": true,
+    "errors": []
+  }
+}

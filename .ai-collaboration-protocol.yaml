@@ -1,0 +1,17 @@
+schema_version: 1
+repository: zh4men9/github-rep-safe-cleaner
+central_repository: zh4men9/ai-collaboration-workbench
+constitution:
+  version: 1.0.0
+github_collaboration:
+  version: 2.0.3
+write_scope:
+  - zh4men9/github-rep-safe-cleaner
+other_repositories: read-only
+project_specific_rules:
+  repository_mutation: forbidden
+  repository_deletion: forbidden
+  repository_archiving: forbidden
+  visibility_change: forbidden
+  inspected_repositories_write_access: forbidden
+  real_cleanup_actions: user_manual_only

@@ -30,8 +30,19 @@
 - Successful checkpoint entries resume only when repository ID and update fingerprints match.
 - Failed checkpoint evidence and changed repository fingerprints are re-probed.
 
+## v1.1 GitHub Actions — PASS
+
+- Validated implementation head: `2911856b8c5124dd8131f7328dbad002688de076`.
+- Workflow run: `31999078965`.
+- Conclusion: `success`.
+- Install: PASS.
+- Compile: PASS.
+- Safety gate: PASS.
+- Unit tests: PASS.
+- Demo report: PASS.
+- Demo artifact verification: PASS.
+
 ## Still required
 
-- Latest v1.1 GitHub Actions head must pass after release metadata is committed.
 - Real scan of the user's 228 repositories must reach report generation or degrade per-repository failures to `MANUAL_REVIEW` without aborting.
 - Browser review and decisions export must be checked on the user's Mac.

@@ -19,3 +19,7 @@ Install, safety tests, demo, authentication, and 228-repository inventory succee
 ## 2026-08-17 — v1.1 transport resilience
 
 Implemented bounded retries with backoff/jitter, explicit retry observability, per-repository transport circuit breaking, fingerprinted checkpoint/resume, and regression tests for both connection resets and resume invalidation.
+
+## 2026-08-17 — v1.1 repository validation
+
+Implementation head `2911856b8c5124dd8131f7328dbad002688de076` passed GitHub Actions run `31999078965`, including install, compile, safety gate, unit tests, demo generation, and demo artifact verification.
